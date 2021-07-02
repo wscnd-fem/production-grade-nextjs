@@ -32,7 +32,7 @@ export const posts = {
 title: "We're hiring"
 summary: 'Will come up with summary later'
 slug: 'we-are-hiring'
-publsihedOn: ''
+publishedOn: ''
 ---
 
 ## nice post, who dis
@@ -41,7 +41,7 @@ publsihedOn: ''
 title: Why you should write down everything
 summary: Will come up with summary later
 slug: why-you-should-write-down-everything
-publsihedOn: ''
+publishedOn: ''
 ---
 ## Writing is fun`,
   ],
@@ -50,7 +50,7 @@ publsihedOn: ''
 title: "We're hiring"
 summary: Come work at a really nice company.
 slug: we-are-hiring
-publsihedOn: '12-03-2020'
+publishedOn: '12-03-2020'
 ---
 ## Come with with us
 `,
@@ -58,7 +58,7 @@ publsihedOn: '12-03-2020'
 title: Why you should write down everything
 summary: If you write it down, you won't forget.
 slug: why-you-should-write-down-everything
-publsihedOn: '3-20-2020'
+publishedOn: '3-20-2020'
 ---
 ## Elon musk writes`,
   ],
