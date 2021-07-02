@@ -1,5 +1,5 @@
 {
-  "parser": "@typescript-eslint/parser", 
+  "parser": "@typescript-eslint/parser",
   "plugins": [
     "import",
     "jest"
@@ -18,7 +18,7 @@
     "react/destructuring-assignment": "off",
     "react/forbid-prop-types": "off",
     "react/prop-types": "off",
-    "react/no-unused-prop-types": "warn",
+    // "react/no-unused-prop-types": "warn",
     "import/extensions": "off",
     "import/no-unresolved": "error",
     "no-underscore-dangle": "off",

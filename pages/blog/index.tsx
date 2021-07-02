@@ -7,7 +7,7 @@ import orderby from 'lodash.orderby'
 import Container from '../../components/container'
 import HomeNav from '../../components/homeNav'
 import PostPreview from '../../components/postPreview'
-import { posts as postsFromCMS } from '../../content'
+import { posts as postsFromCMS } from '../../data/content'
 
 const Blog = ({ posts }) => {
   return (
