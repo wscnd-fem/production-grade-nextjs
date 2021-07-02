@@ -41,10 +41,10 @@ const Home: FC<{ content: { hero: any; features: any[] } }> = ({ content }) => {
  * Should really get this content from our CMS
  */
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
-      content: home.published,
+      content: context.preview ? home.draft : home.published,
     },
   }
 }

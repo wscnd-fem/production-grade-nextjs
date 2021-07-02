@@ -22,8 +22,6 @@ const BlogPost: FC<Post> = ({ source, frontMatter }) => {
   const content = hydrate(source)
   const router = useRouter()
 
-  console.log('summary', frontMatter.summary)
-
   if (router.isFallback) {
     return (
       <Pane width="100%" height="100%">
@@ -62,7 +60,7 @@ interface StaticPaths extends ParsedUrlQuery {
   slug: string
 }
 
-export const getStaticPaths: GetStaticPaths<StaticPaths> = async () => {
+export const getStaticPaths: GetStaticPaths<StaticPaths> = async (context) => {
   // const cmsPosts = await postsFromCMS.draft.map((post) => {
   //   const { data } = matter(post)
   //   return data
@@ -80,10 +78,10 @@ export const getStaticPaths: GetStaticPaths<StaticPaths> = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps<Post, StaticPaths> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<Post, StaticPaths> = async ({ params, preview }) => {
   let cmsPost
   cmsPost =
-    (await postsFromCMS.published
+    (await (preview ? postsFromCMS.draft : postsFromCMS.published)
       .filter((post) => {
         return matter(post).data.slug === params.slug
       })

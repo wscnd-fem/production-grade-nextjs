@@ -36,8 +36,8 @@ const Blog = ({ posts }) => {
  * fs and our CMS
  */
 
-export const getStaticProps: GetStaticProps = async () => {
-  const cmsPosts = await postsFromCMS.draft.map((post) => {
+export const getStaticProps: GetStaticProps = async (context) => {
+  const cmsPosts = await (context.preview ? postsFromCMS.draft : postsFromCMS.published).map((post) => {
     const { data } = matter(post)
     // console.log('content:', content)
     return data
