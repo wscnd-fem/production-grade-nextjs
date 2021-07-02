@@ -41,7 +41,7 @@ const Home: FC<{ content: { hero: any; features: any[] } }> = ({ content }) => {
  * Should really get this content from our CMS
  */
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       content: home.published,
