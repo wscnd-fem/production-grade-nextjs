@@ -10,11 +10,13 @@ const returnFilesFromFolder = async (fromPath: string, callback) => {
   return await Promise.all(files)
 }
 
-const readFileFromFolder = async (fromPath) => {
-  const file = await fs
-    .readFile(fromPath, 'utf-8')
-    .then((file) => file)
-    .catch((error) => undefined)
+const readFileFromFolder = async (file: string) => {
+  console.log('looking for file', file)
+  const read = await fs
+    .readFile(file, 'utf-8')
+    .then((content) => content)
+    .catch(() => undefined)
+  return read
 }
 
 export { returnFilesFromFolder, readFileFromFolder }
