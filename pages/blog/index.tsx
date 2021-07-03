@@ -12,7 +12,7 @@ import path from 'path'
 import { GetStaticProps } from 'next'
 
 const Blog = ({ posts }) => {
-  console.log('posts:', posts)
+  // console.log('posts:', posts)
   return (
     <Pane>
       <header>

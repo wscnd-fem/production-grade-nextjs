@@ -1,10 +1,32 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import { signIn, useSession } from 'next-auth/client'
 import { Pane, majorScale, Text } from 'evergreen-ui'
 import Logo from '../components/logo'
+
+import { useRouter } from 'next/router'
 
 import SocialButton from '../components/socialButton'
 
 const Signin = () => {
+  const [session, loading] = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    console.log('loading? ', loading)
+    console.log('session? ', session)
+  })
+
+  const timeoutRef = useRef<NodeJS.Timeout>()
+
+  useEffect(() => {
+    if (session) {
+      timeoutRef.current = setTimeout(() => {
+        router.push('/app')
+      }, 5000)
+    }
+    return () => clearTimeout(timeoutRef.current)
+  }, [router, session])
+
   return (
     <Pane height="100vh" width="100vw" display="flex">
       <Pane
@@ -37,7 +59,11 @@ const Signin = () => {
         paddingX={majorScale(7)}
       >
         <Pane width="100%" textAlign="center">
-          <SocialButton type="github" onClick={() => {}} />
+          {session ? (
+            <Text>Welcome {session.user.name}</Text>
+          ) : (
+            <SocialButton type="github" onClick={() => signIn('github')} />
+          )}
         </Pane>
       </Pane>
     </Pane>
