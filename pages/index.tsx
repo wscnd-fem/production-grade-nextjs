@@ -8,7 +8,11 @@ import { home } from '../cms/content'
 
 import { GetStaticProps } from 'next'
 
-const Home: FC<{ content: { hero: any; features: any[] } }> = ({ content }) => {
+interface PageProps {
+  content: { hero: any; features: any[] }
+}
+
+const Home: FC<PageProps> = ({ content }) => {
   return (
     <Pane>
       <header>
@@ -40,6 +44,7 @@ const Home: FC<{ content: { hero: any; features: any[] } }> = ({ content }) => {
 /**
  * Should really get this content from our CMS
  */
+
 
 export const getStaticProps: GetStaticProps = async (context) => {
   return {

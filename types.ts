@@ -20,6 +20,11 @@ export interface UserSession {
   name: string
 }
 
+export interface Folder {
+  _id: string,
+  name: string
+}
+
 export interface Request extends NextApiRequest {
   db: Db
   dbClient: MongoClient
