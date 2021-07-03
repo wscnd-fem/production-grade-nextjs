@@ -1,9 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "import",
-    "jest"
-  ],
+  "plugins": ["import", "jest"],
   "settings": {
     "import/resolver": {
       "node": {
@@ -11,6 +8,7 @@
       }
     }
   },
+  "extends": ["plugin:react-hooks/recommended"],
   "rules": {
     "semi": "off",
     "react/jsx-filename-extension": "off",
