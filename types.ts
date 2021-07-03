@@ -1,6 +1,5 @@
 import { Db, MongoClient } from 'mongodb'
-import { NextApiRequest, NextApiResponse } from 'next'
-import type { DefaultSession } from 'next-auth'
+import { NextApiRequest  } from 'next'
 
 export interface PostFrontMatter {
   title: string
@@ -21,8 +20,18 @@ export interface UserSession {
 }
 
 export interface Folder {
-  _id: string,
+  _id: string
   name: string
+  createdBy: string
+  createdAt: string
+}
+
+export interface Doc {
+  createdBy: string
+  _id: string
+  folder: string
+  name: string
+  content?: any
 }
 
 export interface Request extends NextApiRequest {

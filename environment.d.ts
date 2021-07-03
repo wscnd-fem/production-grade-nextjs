@@ -1,5 +1,11 @@
+/* eslint no-unused-vars: 0 */
+import type { MongoClient } from 'mongodb'
+
 declare global {
   namespace NodeJS {
+    interface Global {
+      mongo: { client: MongoClient }
+    }
     interface ProcessEnv {
       NODE_ENV: string
       GITHUB_ID: string

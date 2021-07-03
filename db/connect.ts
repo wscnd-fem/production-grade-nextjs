@@ -1,4 +1,4 @@
-import { Db, MongoClient } from 'mongodb'
+import { MongoClient } from 'mongodb'
 
 /**
  * We have to cache the DB connection
@@ -10,10 +10,24 @@ import { Db, MongoClient } from 'mongodb'
  * environment like serverless. A serverless DB (HTTP based DB) whould work
  * better.
  */
-global.mongo = global.mongo || {}
+
+global.mongo = global.mongo || ({} as { client: MongoClient })
 
 export const connectToDB = async () => {
-  const db = {}
+  if (!global.mongo) {
+    const client = new MongoClient(process.env.DATABASE_URL, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      bufferMaxEntries: 0,
+      connectTimeoutMS: 10000,
+    })
 
+    await global.mongo.client.connect().then(() => {
+      console.log(`connected to db ${process.env.DATABASE_URL}`)
+    })
+
+    global.mongo.client = client
+  }
+  const db = global.mongo.client.db('known')
   return { db, dbClient: global.mongo.client }
 }

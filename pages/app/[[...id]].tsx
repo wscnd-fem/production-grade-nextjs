@@ -14,7 +14,7 @@ import type { Session } from 'next-auth'
 
 import { ParsedUrlQuery } from 'querystring'
 import { GetServerSideProps } from 'next'
-import { UserSession, Folder } from '../../types'
+import { Folder } from '../../types'
 
 interface ServerSideProps extends ParsedUrlQuery {}
 interface PageProps {
