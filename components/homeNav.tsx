@@ -1,12 +1,21 @@
-import React, { FC } from 'react'
-import { Pane, majorScale, Text, Button } from 'evergreen-ui'
+import React, { FC, useEffect } from 'react'
+import { Pane, majorScale, Text, Button, Spinner } from 'evergreen-ui'
 import NextLink from 'next/link'
 import { useSession } from 'next-auth/client'
 import Container from './container'
 import Logo from './logo'
 
-const HomeNav: FC<{ links?: { name: string; link: string }[] }> = ({ links }) => {
-  const [session] = useSession()
+interface PageProps {
+  links?: { name: string; link: string }[]
+}
+
+const HomeNav: FC<PageProps> = ({ links }) => {
+  const [session, loading] = useSession()
+
+  useEffect(() => {
+    console.log('loading:', loading)
+    console.log('session:', session)
+  })
 
   return (
     <nav>
@@ -19,9 +28,9 @@ const HomeNav: FC<{ links?: { name: string; link: string }[] }> = ({ links }) =>
               {links && links.length > 0
                 ? links.map((link) => (
                     <Pane paddingX={majorScale(3)} key={link.name}>
-                      <NextLink href="/blog">
+                      <NextLink href={link.link}>
                         <a>
-                          <Text fontSize="16px">Blog</Text>
+                          <Text fontSize="16px">{link.name}</Text>
                         </a>
                       </NextLink>
                     </Pane>
@@ -29,13 +38,17 @@ const HomeNav: FC<{ links?: { name: string; link: string }[] }> = ({ links }) =>
                 : null}
 
               <Pane paddingX={majorScale(3)}>
-                <NextLink href={session ? '/app' : '/signin'}>
-                  <a>
-                    <Button appearance="primary" fontSize="16px">
-                      {session ? 'Dashboard' : 'Sign up'}
-                    </Button>
-                  </a>
-                </NextLink>
+                {loading ? (
+                  <Spinner  size={30}/>
+                ) : (
+                  <NextLink href={session ? '/app' : '/signin'}>
+                    <a>
+                      <Button appearance="primary" fontSize="16px">
+                        {session ? 'Dashboard' : 'Sign up'}
+                      </Button>
+                    </a>
+                  </NextLink>
+                )}
               </Pane>
             </Pane>
           </Pane>

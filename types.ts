@@ -1,5 +1,6 @@
 import { Db, MongoClient } from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
+import type { DefaultSession } from 'next-auth'
 
 export interface PostFrontMatter {
   title: string
