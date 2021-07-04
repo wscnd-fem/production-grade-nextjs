@@ -17,16 +17,8 @@ import SimpleImage from '@editorjs/simple-image'
 import EditorJS from '@editorjs/editorjs'
 import { Icon, Pane, Text, TickIcon, Spinner, majorScale } from 'evergreen-ui'
 import { useThrottleCallback } from '@react-hook/throttle'
-
-const saveEditor = async (docId: string, data: any) => {
-  await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/doc/${docId}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-}
+import useSaveDoc from '../hooks/useSaveDoc'
+import useDoc from '../hooks/useDoc'
 
 const EDITOR_JS_TOOLS = {
   embed: Embed,
@@ -51,6 +43,14 @@ const Editor: FC<{ docId: string; content: any }> = ({ content, docId }) => {
   const [saving, setSaving] = useState(false)
   const [doneSaving, setDoneSaving] = useState(false)
 
+  const { mutateAsync: saveEditor } = useSaveDoc()
+
+
+  const { data: doc } = useDoc({ content }, docId)
+
+  let timeoutRefSave = useRef<NodeJS.Timeout>()
+  let timeoutRefSaving = useRef<NodeJS.Timeout>()
+
   const save = useThrottleCallback(async () => {
     if (editor.current) {
       const data = await editor.current.save()
@@ -58,16 +58,20 @@ const Editor: FC<{ docId: string; content: any }> = ({ content, docId }) => {
       setSaving(true)
       setDoneSaving(false)
 
-      await saveEditor(docId, { content: data })
+      await saveEditor({ docId, content: data })
 
-      setTimeout(() => {
+      timeoutRefSave.current = setTimeout(() => {
         setSaving(false)
         setDoneSaving(true)
 
-        setTimeout(() => {
+        timeoutRefSaving.current = setTimeout(() => {
           setDoneSaving(false)
         }, 3000)
       }, 2500)
+      return () => {
+        clearTimeout(timeoutRefSave.current)
+        clearTimeout(timeoutRefSave.current)
+      }
     }
   }, 30)
 
@@ -75,13 +79,14 @@ const Editor: FC<{ docId: string; content: any }> = ({ content, docId }) => {
     const editorJs = new EditorJS({
       tools: EDITOR_JS_TOOLS,
       holder: 'editorjs',
-      data: content,
+      data: doc.content,
       autofocus: true,
-      placeholder: 'Let it be known.',
+      placeholder: 'Editor simples de texto',
       onChange: save,
     })
 
     editor.current = editorJs
+    console.log('content is ', doc.content)
 
     return () => {
       if (editor.current) {
@@ -92,7 +97,7 @@ const Editor: FC<{ docId: string; content: any }> = ({ content, docId }) => {
         }
       }
     }
-  }, [save, content])
+  }, [save])
 
   return (
     <Pane width="100%" position="relative">
