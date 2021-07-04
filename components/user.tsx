@@ -1,9 +1,16 @@
-import React, { FC } from 'react'
+import React, { FC, useCallback } from 'react'
 import { Pane, Position, Avatar, Popover, Menu, LogOutIcon, majorScale, Text } from 'evergreen-ui'
 import { signOut } from 'next-auth/client'
 import { UserSession } from '../types'
 
 const User: FC<{ user: UserSession }> = ({ user }) => {
+
+  const onSelectHandler = useCallback(async () => {
+    await signOut({
+      callbackUrl: `${process.env.NEXT_PUBLIC_API_HOST}/app`
+    })
+  }, [])
+
   return (
     <Pane position="fixed" top={20} right={20}>
       <Popover
@@ -20,7 +27,7 @@ const User: FC<{ user: UserSession }> = ({ user }) => {
             </Pane>
             <Pane background="white">
               <Menu>
-                <Menu.Item icon={LogOutIcon} intent="danger" onSelect={() => signOut()}>
+                <Menu.Item icon={LogOutIcon} intent="danger" onSelect={onSelectHandler}>
                   Sign out
                 </Menu.Item>
               </Menu>

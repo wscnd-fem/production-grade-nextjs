@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Dialog, Pane, Heading, majorScale, DocumentIcon, Button } from 'evergreen-ui'
+import { Dialog, Pane, Heading, majorScale, FolderCloseIcon, Button } from 'evergreen-ui'
 import Logo from '../../components/logo'
 import FolderList from '../../components/folderList'
 import NewFolderButton from '../../components/newFolderButton'
@@ -31,8 +31,7 @@ interface PageProps {
 }
 
 const App: FC<PageProps> = ({
-  // folders = [{ _id: 'hello', name: 'folder name', createdat: new date().todatestring(), createdby: 'asdfasfd' }],
-  folders = [],
+  folders ,
   currentDoc,
   currentFolder,
   docsFromCurrentFolder,
@@ -74,7 +73,7 @@ const App: FC<PageProps> = ({
                 <Pane key={folder._id} width="33%">
                   <Link href={`/app/${folder._id}`}>
                     <a>
-                      <Button intent="none" appearance="minimal" iconBefore={DocumentIcon} height={48} color="tint1">
+                      <Button intent="none" appearance="minimal" iconBefore={FolderCloseIcon} height={48} color="tint1">
                         {folder.name}
                       </Button>
                     </a>
@@ -98,7 +97,7 @@ const App: FC<PageProps> = ({
     return (
       <Dialog
         isShown
-        title="Session expired"
+        title="Need authorization"
         confirmLabel="Ok"
         hasCancel={false}
         hasClose={false}
@@ -119,7 +118,7 @@ const App: FC<PageProps> = ({
           <NewFolderButton onClick={() => setIsShown(true)} />
         </Pane>
         <Pane>
-          <FolderList folders={allFolders} />{' '}
+          <FolderList folders={allFolders} currentOpenFolder={currentFolder?._id ?? ''} />
         </Pane>
       </Pane>
       <Pane marginLeft={300} width="calc(100vw - 300px)" height="100vh" overflowY="auto" position="relative">
@@ -136,6 +135,10 @@ const App: FC<PageProps> = ({
       <NewFolderDialog close={() => setIsShown(false)} isShown={newFolderIsShown} onNewFolder={handleNewFolder} />
     </Pane>
   )
+}
+
+App.defaultProps = {
+ folders : []
 }
 
 /**
@@ -177,9 +180,6 @@ export const getServerSideProps: GetServerSideProps<PageProps, ServerSideProps> 
           props.currentDoc = props.docsFromCurrentFolder.find((docs) => docs._id === docFromParams)
         }
       }
-
-
-
 
       return {
         props,

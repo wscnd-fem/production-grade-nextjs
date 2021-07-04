@@ -45,7 +45,6 @@ const Editor: FC<{ docId: string; content: any }> = ({ content, docId }) => {
 
   const { mutateAsync: saveEditor } = useSaveDoc()
 
-
   const { data: doc } = useDoc({ content }, docId)
 
   let timeoutRefSave = useRef<NodeJS.Timeout>()
@@ -68,10 +67,11 @@ const Editor: FC<{ docId: string; content: any }> = ({ content, docId }) => {
           setDoneSaving(false)
         }, 3000)
       }, 2500)
-      return () => {
-        clearTimeout(timeoutRefSave.current)
-        clearTimeout(timeoutRefSave.current)
-      }
+    }
+
+    return () => {
+      clearTimeout(timeoutRefSave.current)
+      clearTimeout(timeoutRefSave.current)
     }
   }, 30)
 
@@ -86,7 +86,6 @@ const Editor: FC<{ docId: string; content: any }> = ({ content, docId }) => {
     })
 
     editor.current = editorJs
-    console.log('content is ', doc.content)
 
     return () => {
       if (editor.current) {

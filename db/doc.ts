@@ -19,7 +19,6 @@ export const createDoc = async (db: Db, doc: Doc) => {
       createdAt: new Date().toDateString(),
     })
     .then(({ ops, ...rest }) => {
-      // console.log('rest:', rest)
       console.log('ops:', ops)
       return ops[0]
     })

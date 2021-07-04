@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import hydrate from 'next-mdx-remote/hydrate'
 import renderToString from 'next-mdx-remote/render-to-string'
-import { majorScale, Pane, Heading, Spinner } from 'evergreen-ui'
+import { majorScale, Pane, Heading, Spinner, Paragraph } from 'evergreen-ui'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { Post } from '../../types'
@@ -43,6 +43,7 @@ const BlogPost: FC<Post> = ({ source, frontMatter }) => {
           <Heading fontSize="clamp(2rem, 8vw, 6rem)" lineHeight="clamp(2rem, 8vw, 6rem)" marginY={majorScale(3)}>
             {frontMatter.title}
           </Heading>
+          <Paragraph marginBottom={majorScale(2)}>{frontMatter.summary}</Paragraph>
           <Pane>{content}</Pane>
         </Container>
       </main>

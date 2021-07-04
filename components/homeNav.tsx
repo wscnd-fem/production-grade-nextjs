@@ -12,11 +12,6 @@ interface PageProps {
 const HomeNav: FC<PageProps> = ({ links }) => {
   const [session, loading] = useSession()
 
-  useEffect(() => {
-    console.log('loading:', loading)
-    console.log('session:', session)
-  })
-
   return (
     <nav>
       <Pane width="100vw" paddingY={majorScale(1)} borderBottom height={majorScale(9)}>

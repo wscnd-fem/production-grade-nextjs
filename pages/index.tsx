@@ -34,7 +34,7 @@ const Home: FC<PageProps> = ({ content }) => {
       </main>
       <footer>
         <Pane background="overlay" paddingY={majorScale(9)}>
-          <Container>hello</Container>
+          <Container>Footer :D</Container>
         </Pane>
       </footer>
     </Pane>

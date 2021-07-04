@@ -4,10 +4,10 @@ import { Text } from 'evergreen-ui'
 
 const Logo = ({ ...styles }) => {
   return (
-    <Link href="/app">
+    <Link href="/">
       <a>
         <Text fontSize="30px" color="#47B881" {...styles}>
-          <strong>Known.</strong>
+          <strong>Notas.</strong>
         </Text>
       </a>
     </Link>

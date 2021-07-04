@@ -10,7 +10,6 @@ export default function useSaveDoc() {
   const queryClient = useQueryClient()
   return useMutation(updateDoc, {
     onSuccess: ({ data }) => {
-      console.log('data from save doc:', data)
       queryClient.invalidateQueries(['doc', data._id])
     },
   })
