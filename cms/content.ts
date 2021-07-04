@@ -48,7 +48,7 @@ publishedOn: ''
   published: [
     `---
 title: "We're hiring"
-summary: Come work at a really nice company.
+summary: This file is loaded from a fake cms api. it is the published one!
 slug: we-are-hiring
 publishedOn: '12-03-2020'
 ---
@@ -56,7 +56,7 @@ publishedOn: '12-03-2020'
 `,
     `---
 title: Why you should write down everything
-summary: If you write it down, you won't forget.
+summary: If you write it down, you won't forget. Maybe remember to put button to see draft posts?
 slug: why-you-should-write-down-everything
 publishedOn: '3-20-2020'
 ---
