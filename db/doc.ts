@@ -3,23 +3,23 @@ import { nanoid } from 'nanoid'
 import { Doc, Folder } from '../types'
 
 export const getOneDoc = async (db: Db, id: string) => {
-  return db.collection<Doc>('docs').findOne({ _id: id })
+  return await db.collection<Doc>('docs').findOne({ _id: id })
 }
 
-export const getDocsByFolder = async (db: Db, folderId: string) => {
-  return db.collection<Doc>('docs').findOne({ folder: folderId })
+export const getDocsByFolderId = async (db: Db, folderId: string) => {
+  return await db.collection<Doc>('docs').find({ folder: folderId }).toArray()
 }
 
 export const createDoc = async (db: Db, doc: Doc) => {
-  const newDoc = db
-    .collection<Folder>('folder')
+  const newDoc = await db
+    .collection<Folder>('docs')
     .insertOne({
       _id: nanoid(),
       ...doc,
       createdAt: new Date().toDateString(),
     })
     .then(({ ops, ...rest }) => {
-      console.log('rest:', rest)
+      // console.log('rest:', rest)
       console.log('ops:', ops)
       return ops[0]
     })

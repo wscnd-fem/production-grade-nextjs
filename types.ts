@@ -1,5 +1,5 @@
 import { Db, MongoClient } from 'mongodb'
-import { NextApiRequest  } from 'next'
+import { NextApiRequest } from 'next'
 
 export interface PostFrontMatter {
   title: string
@@ -20,15 +20,15 @@ export interface UserSession {
 }
 
 export interface Folder {
-  _id: string
+  _id?: string
   name: string
-  createdBy: string
-  createdAt: string
+  createdBy?: string
+  createdAt?: string
 }
 
 export interface Doc {
-  createdBy: string
-  _id: string
+  createdBy?: string
+  _id?: string
   folder: string
   name: string
   content?: any

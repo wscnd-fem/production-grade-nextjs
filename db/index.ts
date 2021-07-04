@@ -3,4 +3,4 @@ import * as folder from './folder'
 import * as user from './user'
 
 export { connectToDB } from './connect'
-export { doc, folder, user }
+export { doc as DocModel, folder as FolderModel, user  as UserModel}

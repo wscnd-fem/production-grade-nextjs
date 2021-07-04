@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid'
 import { Folder } from '../types'
 
 export const createFolder = async (db: Db, folder: Folder) => {
-  const newFolder = db
+  const newFolder = await db
     .collection<Folder>('folders')
     .insertOne({
       _id: nanoid(),
@@ -11,7 +11,7 @@ export const createFolder = async (db: Db, folder: Folder) => {
       createdAt: new Date().toDateString(),
     })
     .then(({ ops, ...rest }) => {
-      console.log('rest:', rest)
+      // console.log('rest:', rest)
       console.log('ops:', ops)
       return ops[0]
     })
@@ -20,6 +20,5 @@ export const createFolder = async (db: Db, folder: Folder) => {
 }
 
 export const getFolders = async (db: Db, userId: string) => {
-  console.log('Db connection', Db)
-  return db.collection<Folder>('folders').find({ createdBy: userId }).toArray()
+  return await db.collection<Folder>('folders').find({ createdBy: userId }).toArray()
 }
