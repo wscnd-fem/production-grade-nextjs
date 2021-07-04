@@ -14,30 +14,38 @@ import type { Session } from 'next-auth'
 
 import { ParsedUrlQuery } from 'querystring'
 import { GetServerSideProps } from 'next'
-import { Folder } from '../../types'
+import { Folder, Doc } from '../../types'
 
-interface ServerSideProps extends ParsedUrlQuery {}
+import { FolderModel, DocModel, connectToDB } from '../../db'
+
 interface PageProps {
   folders?: Folder[]
-  activeFolder?: any
-  activeDoc?: any
-  activeDocs?: any[]
+  currentFolder?: Folder
+  currentDoc?: Doc
+  docsFromCurrentFolder?: Doc[]
   session?: Session
 }
 
-const App: FC<PageProps> = ({ folders = [{ _id: 'hello', name: "folder name" }], activeDoc, activeFolder, activeDocs }) => {
+const App: FC<PageProps> = ({
+  // folders = [{ _id: 'hello', name: 'folder name', createdat: new date().todatestring(), createdby: 'asdfasfd' }],
+  folders,
+  currentDoc,
+  currentFolder,
+  docsFromCurrentFolder,
+}) => {
   const router = useRouter()
   const [newFolderIsShown, setIsShown] = useState(false)
   const [session, loading] = useSession()
 
   const Page = () => {
-    if (activeDoc) {
-      return <DocPane folder={activeFolder} doc={activeDoc} />
+    if (currentDoc) {
+      return <DocPane folder={currentFolder} doc={currentDoc} />
     }
 
-    if (activeFolder) {
-      return <FolderPane folder={activeFolder} docs={activeDocs} />
+    if (currentFolder) {
+      return <FolderPane folder={currentFolder} docs={docsFromCurrentFolder} />
     }
+
     return null
   }
 
@@ -101,13 +109,51 @@ const App: FC<PageProps> = ({ folders = [{ _id: 'hello', name: "folder name" }],
  * @param context
  */
 
+interface ServerSideProps extends ParsedUrlQuery {
+  id: string[]
+}
+
 export const getServerSideProps: GetServerSideProps<PageProps, ServerSideProps> = async (ctx) => {
   const session = await getSession(ctx)
 
+  if (session) {
+    const props: PageProps = { session }
+
+    const { db } = await connectToDB()
+
+    if (session.user.id) {
+      // if (ctx.params.id && session.user.id) {
+      props.folders = await FolderModel.getFolders(db, session.user.id)
+
+      const [folderFromParams, docFromParams] = ctx.params?.id ?? []
+
+      if (folderFromParams) {
+        props.currentFolder = props.folders.find((folder) => folder._id === folderFromParams)
+
+        props.docsFromCurrentFolder = await DocModel.getDocsByFolderId(db, props.currentFolder?._id)
+
+        if (docFromParams) {
+          props.currentDoc = props.docsFromCurrentFolder.find((docs) => docs._id === docFromParams)
+        }
+      }
+
+      console.log('folderFromParams:', folderFromParams)
+      console.log('docFromParams:', docFromParams)
+
+      console.log('currentFolder:', props.currentFolder)
+      console.log('docsFromCurrentFolder:', props.docsFromCurrentFolder)
+
+      console.log('ctx params:', ctx.params)
+      console.log('session:', session)
+
+      return {
+        props,
+      }
+    }
+  }
+
   return {
-    props: {
-      session,
-    },
+    props: { session },
   }
 }
 
