@@ -12,15 +12,20 @@ const handler = nc({
 
 handler.use(middleware)
 
+handler.get(async (req: Request, res: NextApiResponse) => {
+  const docs = await DocModel.getDocsByFolderId(req.db, req.query.id)
+  res.send(docs)
+})
+
 handler.post(async (req: Request, res: NextApiResponse) => {
   const newDoc = await DocModel.createDoc(req.db, {
     folder: req.body._id,
     createdBy: req.user.id,
     name: req.body.name,
-    content: req.body.content
+    content: req.body.content,
   })
 
-  res.send({ data: newDoc })
+  res.send(newDoc)
 })
 
-export default handler;
+export default handler

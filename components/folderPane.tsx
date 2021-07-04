@@ -1,26 +1,26 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState  } from 'react'
 import { Pane, Heading, majorScale, DocumentIcon, Button } from 'evergreen-ui'
 import Link from 'next/link'
 import { getRandomGradientCss } from '../utils/gradients'
 import NewFolderButton from './newFolderButton'
 import NewDocDialog from './newDocumentDialog'
+import { Folder, Doc } from '../types'
+import useDocs from '../hooks/useDocs'
+import useCreateDoc from '../hooks/useCreateDoc'
 
-const FolderPane: FC<{ folder: any; docs: any[] }> = ({ folder, docs }) => {
+interface PageProps {
+  folder: Folder
+  docs?: Doc[]
+}
+
+const FolderPane: FC<PageProps> = ({ folder, docs }) => {
   const { bg, image } = getRandomGradientCss()
   const [isShown, setIsShown] = useState(false)
-  const [allDocs, setDocs] = useState(docs || [])
+  const { data: allDocs } = useDocs(docs, folder._id)
+  const { mutateAsync: createDoc } = useCreateDoc()
 
   const handleNewDoc = async (name: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/doc/`, {
-      method: 'POST',
-      body: JSON.stringify({ name, folder: folder._id }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    const { data } = await res.json()
-    setDocs((state) => [...state, data])
+    await createDoc({ name, _id: folder._id })
   }
 
   return (

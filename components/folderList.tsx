@@ -1,5 +1,5 @@
 import { Pane, majorScale, Menu, FolderCloseIcon } from 'evergreen-ui'
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import { useRouter } from 'next/router'
 import { Folder } from '../types'
 

@@ -1,35 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { signIn, useSession } from 'next-auth/client'
-import { Pane, majorScale, Text } from 'evergreen-ui'
+import { Pane, majorScale, Text, Avatar } from 'evergreen-ui'
 import Logo from '../components/logo'
 
 import { useRouter } from 'next/router'
 
 import SocialButton from '../components/socialButton'
+import useInterval from '@use-it/interval'
 
 const Signin = () => {
   const [session, loading] = useSession()
   const [redirecting, setRedirecting] = useState(false)
+  const [countdownRedirect, setCountdownRedirect] = useState(0)
   const router = useRouter()
 
-  useEffect(() => {
-    console.log('loading? ', loading)
-    console.log('session? ', session)
-    console.log('router:', router)
-  })
-
-  const timeoutRef = useRef<NodeJS.Timeout>()
-
   const timeoutRedirectingRef = useRef<NodeJS.Timeout>()
-
-  useEffect(() => {
-    if (session && !loading) {
-      timeoutRef.current = setTimeout(() => {
-        router.push('/app')
-      }, 5000)
-    }
-    return () => clearTimeout(timeoutRef.current)
-  }, [router, session, loading])
 
   useEffect(() => {
     if (session && !loading) {
@@ -39,6 +24,20 @@ const Signin = () => {
     }
     return () => clearTimeout(timeoutRedirectingRef.current)
   }, [router, session, loading])
+
+  useEffect(() => {
+    if (session && !loading) {
+      if (countdownRedirect === 1) {
+        router.push('/app')
+      }
+    }
+  }, [countdownRedirect, router, loading, session])
+
+  useInterval(() => {
+    if (redirecting) {
+      setCountdownRedirect((previous) => previous + 1)
+    }
+  }, 600)
 
   return (
     <Pane height="100vh" width="100vw" display="flex">
@@ -76,8 +75,11 @@ const Signin = () => {
             <Text>Loading...</Text>
           ) : session ? (
             <>
-              <Text>Welcome {session.user.name}</Text>
-              {redirecting ? <Text display="block">redirecting in 5 secs</Text> : null}
+              <Pane textAlign="center" display="flex" flexDirection="column" alignItems="center">
+                <Avatar src={session.user.image} size={70} />
+                <Text>Welcome {session.user.name}</Text>
+              </Pane>
+              {redirecting ? <Text display="block">Loading your docs {'.'.repeat(countdownRedirect)}</Text> : null}
             </>
           ) : (
             <SocialButton type="github" onClick={() => signIn('github')} />

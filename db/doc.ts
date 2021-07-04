@@ -28,9 +28,7 @@ export const createDoc = async (db: Db, doc: Doc) => {
 }
 
 export const updateOne = async (db: Db, id: string, updates: Omit<Partial<Doc>, '_id'>) => {
-  await db.collection<Doc>('docs').updateOne({ _id: id }, { $set: updates })
-
+  await db.collection<Doc>('docs').findOneAndUpdate({ _id: id }, { $set: { content: updates } })
   const doc = await db.collection<Doc>('docs').findOne({ _id: id })
-
   return doc
 }

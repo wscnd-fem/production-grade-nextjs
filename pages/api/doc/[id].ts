@@ -12,10 +12,14 @@ const handler = nc({
 
 handler.use(middleware)
 
-handler.put(async (req: Request, res: NextApiResponse) => {
-  const updatedDoc = await DocModel.updateOne(req.db, req.query.id, req.body)
-
-  res.send({ data: updatedDoc })
+handler.get(async (req: Request, res: NextApiResponse) => {
+  const docs = await DocModel.getOneDoc(req.db, req.query.id)
+  res.send(docs)
 })
 
-export default handler;
+handler.put(async (req: Request, res: NextApiResponse) => {
+  const updatedDoc = await DocModel.updateOne(req.db, req.query.id, req.body)
+  res.send(updatedDoc)
+})
+
+export default handler
