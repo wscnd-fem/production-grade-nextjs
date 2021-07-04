@@ -1,5 +1,5 @@
 import { Db, MongoClient } from 'mongodb'
-import { NextApiRequest } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export interface PostFrontMatter {
   title: string
@@ -38,4 +38,13 @@ export interface Request extends NextApiRequest {
   db: Db
   dbClient: MongoClient
   user: { email: string; id: string }
+  body: {
+    _id?: string,
+    name: string,
+    createdBy: string,
+    content?: string
+  }
+  query: {
+    id: string
+  }
 }
