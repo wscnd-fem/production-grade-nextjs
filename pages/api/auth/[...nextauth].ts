@@ -29,7 +29,6 @@ export default (req, res) =>
         const { db } = await connectToDB()
 
         if (isNewUser) {
-
           const personalFolder = await FolderModel.createFolder(db, {
             createdBy: `${user.id}`,
             name: 'Getting Started',
