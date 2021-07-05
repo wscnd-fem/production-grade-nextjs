@@ -1,5 +1,6 @@
 import { Db, MongoClient } from 'mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
 
 export interface PostFrontMatter {
   title: string
@@ -8,7 +9,7 @@ export interface PostFrontMatter {
 }
 
 export interface Post {
-  source: string
+  source: MDXRemoteSerializeResult<Record<string, unknown>>
   frontMatter: PostFrontMatter
 }
 
@@ -39,9 +40,9 @@ export interface Request extends NextApiRequest {
   dbClient: MongoClient
   user: { email: string; id: string }
   body: {
-    _id?: string,
-    name: string,
-    createdBy: string,
+    _id?: string
+    name: string
+    createdBy: string
     content?: string
   }
   query: {

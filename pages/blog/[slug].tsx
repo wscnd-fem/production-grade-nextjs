@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
-import hydrate from 'next-mdx-remote/hydrate'
-import renderToString from 'next-mdx-remote/render-to-string'
+import { serialize } from 'next-mdx-remote/serialize'
+import { MDXRemote } from 'next-mdx-remote'
 import { majorScale, Pane, Heading, Spinner, Paragraph } from 'evergreen-ui'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -19,7 +19,6 @@ import { ParsedUrlQuery } from 'querystring'
 import { readFileFromFolder } from '../../utils/readFromFs'
 
 const BlogPost: FC<Post> = ({ source, frontMatter }) => {
-  const content = hydrate(source)
   const router = useRouter()
 
   if (router.isFallback) {
@@ -44,7 +43,8 @@ const BlogPost: FC<Post> = ({ source, frontMatter }) => {
             {frontMatter.title}
           </Heading>
           <Paragraph marginBottom={majorScale(2)}>{frontMatter.summary}</Paragraph>
-          <Pane>{content}</Pane>
+          {/* <Pane>{content}</Pane> */}
+          <Pane> <MDXRemote {...source} /> </Pane>
         </Container>
       </main>
     </Pane>
@@ -70,11 +70,10 @@ export const getStaticPaths: GetStaticPaths<StaticPaths> = async (context) => {
   const postsPath = path.join(process.cwd(), 'posts')
   const postsMatterContent: ReturnType<typeof matter>[] = await returnFilesFromFolder(postsPath, matter)
   const fsPosts = postsMatterContent.map(({ data }) => data)
+  const paths = fsPosts.map(({ slug }) => ({ params: { slug } }))
 
   return {
-    paths: [...fsPosts /** ...cmsPosts*/].map(({ slug }) => ({
-      params: { slug },
-    })),
+    paths,
     fallback: true,
   }
 }
@@ -90,14 +89,18 @@ export const getStaticProps: GetStaticProps<Post, StaticPaths> = async ({ params
 
   if (!cmsPost) {
     const postsPath = path.join(process.cwd(), 'posts', params.slug + '.mdx')
-    cmsPost = matter(await readFileFromFolder(postsPath))
+
+    const file = await readFileFromFolder(postsPath)
+    cmsPost = matter(file)
   }
+  const mdxSource = await serialize(cmsPost.content, { scope: cmsPost.data })
 
   return {
     props: {
       frontMatter: cmsPost.data,
-      source: await renderToString(cmsPost.content, { scope: cmsPost.data }),
+      source: mdxSource,
     },
+    revalidate: 30,
   }
 }
 
